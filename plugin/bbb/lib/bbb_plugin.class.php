@@ -230,6 +230,15 @@ class BBBPlugin extends Plugin
             ]
         );
 
+        Database::query(
+            "CREATE TABLE plugin_bbb_meeting_format (
+                    id int unsigned not null PRIMARY KEY AUTO_INCREMENT,
+                    meeting_id int unsigned not null,
+                    format_type varchar(255) not null,
+                    resource_url text not null
+                    );"
+        );
+
         // Copy icons into the main/img/icons folder
         $iconName = 'bigbluebutton';
         $iconsList = [
@@ -304,6 +313,10 @@ class BBBPlugin extends Plugin
             );
             if (!empty($extraFieldInfo)) {
                 $extraField->delete($extraFieldInfo['id']);
+            }
+
+            if ($sm->tablesExist('plugin_bbb_meeting_format')) {
+                Database::query('DROP TABLE IF EXISTS plugin_bbb_meeting_format');
             }
 
             $sql = "DELETE FROM $t_options WHERE variable = 'bbb_plugin'";
